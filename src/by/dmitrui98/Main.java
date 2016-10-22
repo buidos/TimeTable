@@ -9,8 +9,9 @@ import java.sql.*;
 public class Main {
     JButton button;
 
-
     public static void main(String[] args) {
+        System.out.println("Добавляем важное изменение");
+
         Main pr = new Main();
         pr.go();
     }
