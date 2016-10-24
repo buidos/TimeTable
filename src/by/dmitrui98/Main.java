@@ -1,5 +1,8 @@
 package by.dmitrui98;
 
+import by.dmitrui98.gui.TimetableMainPanel;
+import by.dmitrui98.gui.TimetableMenuBar;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,22 +13,33 @@ public class Main {
     JButton button;
 
     public static void main(String[] args) {
-        System.out.println("Добавляем важное изменение");
-
         Main pr = new Main();
         pr.go();
     }
 
     public void go() {
-        JFrame frame = new JFrame("Приложение");
+        JFrame frame = new JFrame("Составляем расписание");
+
+        // создаем главное меню
+        TimetableMenuBar menuBar = new TimetableMenuBar();
+
+        TimetableMainPanel mainPanel = new TimetableMainPanel();
 
         button = new JButton("Подключиться к БД");
         button.addActionListener(new MyActionListener());
 
         JTable table = new JTable(10, 5);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        JScrollPane scroller = new JScrollPane(table);
+        scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-        frame.getContentPane().add(BorderLayout.NORTH, button);
-        frame.getContentPane().add(BorderLayout.CENTER, table);
+
+        frame.setJMenuBar(menuBar);
+
+        frame.getContentPane().add(BorderLayout.NORTH, mainPanel);
+        frame.getContentPane().add(BorderLayout.CENTER, scroller);
+
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
