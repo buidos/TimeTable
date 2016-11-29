@@ -1,7 +1,6 @@
 package by.dmitrui98.gui;
 
 import by.dmitrui98.Main;
-import by.dmitrui98.data.Teacher;
 import by.dmitrui98.data.TeacherColumn;
 import by.dmitrui98.data.WorkingTeacher;
 import by.dmitrui98.tableModel.CheckModel;
@@ -76,6 +75,8 @@ public class TimetableNorthPanel extends JPanel {
         MyChangeListener changeListener = new MyChangeListener();
 
         JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("установите необходимые критерии:"));
+
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
@@ -160,6 +161,8 @@ public class TimetableNorthPanel extends JPanel {
         this.add(panel);
     }
 
+    TableFactory tf;
+
     JScrollPane scrollerPred;
     private void showTable(ArrayList<TeacherColumn> teacherColumns) {
         ArrayList <Integer> dayCriteria = new ArrayList<Integer>();
@@ -170,59 +173,65 @@ public class TimetableNorthPanel extends JPanel {
 
         int colDay = dayCriteria.size();
 
-        TableFactory tb = new TableFactory(workingTeachers);
 
-        JTable loadTable = tb.createLoad(selectedGroup, dayCriteria);
-        JTable pairTable = tb.createPair(colDay);
-        JTable dayTable = tb.createDay(dayCriteria, pairTable.getRowHeight());
-        JTable teacherTable = tb.createTeacher(teacherColumns);
+        JScrollPane scroller = null;
+        if (colDay > 0 && selectedGroup.size() > 0) {
+            tf = new TableFactory(workingTeachers);
+
+            JTable loadTable = tf.createLoad(selectedGroup, dayCriteria);
+            JTable pairTable = tf.createPair(colDay);
+            JTable dayTable = tf.createDay(dayCriteria, pairTable.getRowHeight());
+            JTable teacherTable = tf.createTeacher(teacherColumns);
 
 
-        JPanel mainPanel = new JPanel();
+            JPanel mainPanel = new JPanel();
 
-        mainPanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
+            mainPanel.setLayout(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            c.fill = GridBagConstraints.HORIZONTAL;
 
-        JTableHeader tableHeader = dayTable.getTableHeader();
-        c.gridx = 0;
-        c.gridy = 0;
-        mainPanel.add(tableHeader, c);
-        c.gridx = 0;
-        c.gridy = 1;
-        mainPanel.add(dayTable, c);
+            JTableHeader tableHeader = dayTable.getTableHeader();
+            c.gridx = 0;
+            c.gridy = 0;
+            mainPanel.add(tableHeader, c);
+            c.gridx = 0;
+            c.gridy = 1;
+            mainPanel.add(dayTable, c);
 
-        tableHeader = pairTable.getTableHeader();
-        c.gridx = 1;
-        c.gridy = 0;
-        c.ipadx = 50;
-        mainPanel.add(tableHeader, c);
-        c.gridx = 1;
-        c.gridy = 1;
-        mainPanel.add(pairTable, c);
+            tableHeader = pairTable.getTableHeader();
+            c.gridx = 1;
+            c.gridy = 0;
+            //c.ipadx = 50;
+            mainPanel.add(tableHeader, c);
+            c.gridx = 1;
+            c.gridy = 1;
+            mainPanel.add(pairTable, c);
 
-        tableHeader = loadTable.getTableHeader();
-        c.gridx = 2;
-        c.gridy = 0;
-        c.ipadx = 50;
-        mainPanel.add(tableHeader, c);
-        c.gridx = 2;
-        c.gridy = 1;
-        mainPanel.add(loadTable, c);
+            tableHeader = loadTable.getTableHeader();
+            c.gridx = 2;
+            c.gridy = 0;
+            //c.ipadx = 50;
+            mainPanel.add(tableHeader, c);
+            c.gridx = 2;
+            c.gridy = 1;
+            mainPanel.add(loadTable, c);
 
-        c.gridx = 2;
-        c.gridy = 2;
-        mainPanel.add(teacherTable, c);
+            c.gridx = 2;
+            c.gridy = 2;
+            mainPanel.add(teacherTable, c);
 
-        JScrollPane scroller = new JScrollPane(mainPanel);
-        scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scroller = new JScrollPane(mainPanel);
+            scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+
+            frame.getContentPane().add(BorderLayout.CENTER, scroller);
+        }
 
         if (scrollerPred != null) {
             frame.remove(scrollerPred);
         }
 
-        frame.getContentPane().add(BorderLayout.CENTER, scroller);
         frame.repaint();
         frame.revalidate();
 
@@ -319,5 +328,9 @@ public class TimetableNorthPanel extends JPanel {
 
     public JButton getBtnShow() {
         return btnShow;
+    }
+
+    public TableFactory getTf() {
+        return tf;
     }
 }

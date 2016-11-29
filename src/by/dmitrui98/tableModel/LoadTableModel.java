@@ -42,7 +42,14 @@ public class LoadTableModel extends AbstractTableModel {
                 int r = defineRow(p.getRow());
                 if (r != -1) {
                     int c = sg.indexOf(p.getGroup());
-                    contents[r][c] = wt;
+
+                    if (!contents[r][c].equals("")) {
+                        ArrayList<WorkingTeacher> list = new ArrayList<WorkingTeacher>();
+                        list.add((WorkingTeacher) contents[r][c]);
+                        list.add(wt);
+                        contents[r][c] = list;
+                    } else
+                        contents[r][c] = wt;
                 }
             }
         }
@@ -76,7 +83,6 @@ public class LoadTableModel extends AbstractTableModel {
         int pair = row % Main.COUNT_PAIR;
         for (int i = 0; i < dayCriteria.size(); i++) {
             if (day == dayCriteria.get(i)) {
-                System.out.println(i * Main.COUNT_PAIR + pair);
                 return i * Main.COUNT_PAIR + pair;
             }
         }

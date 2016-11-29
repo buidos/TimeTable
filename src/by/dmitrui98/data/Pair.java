@@ -39,4 +39,6 @@ public class Pair implements Serializable {
         Pair pair = (Pair) obj;
         return (this.getRow() == pair.getRow()) && (this.getGroup() == pair.getGroup()) && (this.getTypeHour() == pair.getTypeHour());
     }
+
+
 }

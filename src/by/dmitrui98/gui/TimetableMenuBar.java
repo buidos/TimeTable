@@ -1,9 +1,13 @@
 package by.dmitrui98.gui;
 
 import by.dmitrui98.Main;
-import by.dmitrui98.data.Teacher;
 import by.dmitrui98.data.TeacherColumn;
 import by.dmitrui98.data.WorkingTeacher;
+
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,16 +15,19 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 
+
 /**
  * Created by Администратор on 24.10.2016.
  */
 public class TimetableMenuBar extends JMenuBar {
-    Main main;
+    private Main main;
 
     private JFrame frame;
-    File file;
+    private File file;
     private ArrayList<TeacherColumn> teacherColumns;
     private ArrayList<WorkingTeacher> workingTeachers;
+
+    private JFrame tFrame;
 
     public TimetableMenuBar(Main m) {
         main = m;
@@ -46,12 +53,19 @@ public class TimetableMenuBar extends JMenuBar {
         editMenu.add(clearMenuItem);
 
         JMenu serviceMenu = new JMenu("сервис");
+
         JMenuItem teacherTableMenuItem = new JMenuItem("расписание преподавателей");
         teacherTableMenuItem.addActionListener(new TeacherMenuListener());
+
+        JMenuItem excelMenuItem = new JMenuItem("вывести в excel");
+        excelMenuItem.addActionListener(new ExcelMenuListener());
+
         JMenuItem referenceMenuItem = new JMenuItem("справка");
         referenceMenuItem.addActionListener(new ReferenceMenuListener());
+
         serviceMenu.add(teacherTableMenuItem);
         serviceMenu.add(referenceMenuItem);
+        serviceMenu.add(excelMenuItem);
 
         this.add(fileMenu);
         this.add(editMenu);
@@ -68,8 +82,6 @@ public class TimetableMenuBar extends JMenuBar {
 
     public void save() {
         try {
-            teacherColumns = main.getTeacherColumns();
-            workingTeachers = main.getWorkingTeachers();
 
             FileOutputStream fileStream = new FileOutputStream(file);
             ObjectOutputStream os = new ObjectOutputStream(fileStream);
@@ -154,15 +166,22 @@ public class TimetableMenuBar extends JMenuBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
+            workingTeachers.clear();
+            main.readTeacherColumns();
+            main.getNorthPanel().getBtnShow().doClick();
         }
     }
 
+    HintTextField tfMask;
+    JTable table;
     class TeacherMenuListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            tFrame = new TeacherRaspFrame("Расписание преподавателей", main);
 
+            tFrame.setSize(new Dimension(900, 400));
+            tFrame.setVisible(true);
         }
     }
 
@@ -170,7 +189,95 @@ public class TimetableMenuBar extends JMenuBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            JFrame ref = new JFrame("Справка");
 
+            ref.setSize(400, 400);
+            ref.setVisible(true);
         }
     }
+
+    private class ExcelMenuListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            exportExcel();
+        }
+    }
+
+    private void exportExcel() {
+
+        JTable loadTable = main.getNorthPanel().getTf().getLoadTable();
+        JTable dayTable = main.getNorthPanel().getTf().getDayTable();
+        JTable pairTable = main.getNorthPanel().getTf().getPairTable();
+
+        Workbook workbook = new HSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Расписание");
+        Row row = sheet.createRow(0);
+        Cell cell;
+
+        int i = 0;
+        for (int j = 0; j < dayTable.getModel().getColumnCount(); j++, i++) {
+            cell = row.createCell(i);
+            cell.setCellValue(dayTable.getModel().getColumnName(j));
+        }
+
+        for (int j = 0; j < pairTable.getModel().getColumnCount(); j++, i++) {
+            cell = row.createCell(i);
+            cell.setCellValue(pairTable.getModel().getColumnName(j));
+        }
+
+        for (int j = 0; j < loadTable.getModel().getColumnCount(); j++, i++) {
+            cell = row.createCell(i);
+            cell.setCellValue(loadTable.getModel().getColumnName(j));
+        }
+
+
+
+        for (int z = 0; z < loadTable.getModel().getRowCount(); z++) {
+            row = sheet.createRow(z + 1);
+            for (int j = 0; j < loadTable.getModel().getColumnCount(); j++) {
+                cell = row.createCell(j+2);
+                cell.setCellValue(loadTable.getModel().getValueAt(z, j).toString());
+                sheet.autoSizeColumn(j);
+            }
+        }
+
+        for (int z = 0; z < pairTable.getModel().getRowCount(); z++) {
+            row = sheet.getRow(z + 1);
+            for (int j = 0; j < pairTable.getModel().getColumnCount(); j++) {
+                cell = row.createCell(j+1);
+                cell.setCellValue(Integer.parseInt(pairTable.getModel().getValueAt(z, j).toString()));
+                sheet.autoSizeColumn(j);
+            }
+        }
+
+        // объединяем дни
+        CellStyle style = workbook.createCellStyle();
+        for (int j = 0, z = 0; z < dayTable.getModel().getRowCount(); j+= 7, z++) {
+            CellRangeAddress region = new CellRangeAddress(j+1, j+7, 0, 0);
+            sheet.addMergedRegion(region);
+
+            row = sheet.getRow(j+1);
+            cell = row.createCell(0);
+            cell.setCellValue(dayTable.getModel().getValueAt(z, 0).toString());
+
+            style.setAlignment(HorizontalAlignment.CENTER);
+            style.setVerticalAlignment(VerticalAlignment.CENTER);
+            cell.setCellStyle(style);
+        }
+
+
+//
+        try (FileOutputStream fileExcel = new FileOutputStream("Table.xls")) {
+            workbook.write(fileExcel);
+//            Pump.frame.message(this,
+//                    "Таблица успешно записана в файл: Table.xls\n" + "адрес: "
+//                            + System.getProperty("user.dir"),
+//                    "Справочник насосов для ИТП", Message.information);
+        } catch (IOException e) {
+//            Pump.frame.message(this, "Невозможно выполнить данную операцию.",
+//                    "Ошибка", Message.error);
+            System.out.println("output excel error");
+        }
+    }
+
 }

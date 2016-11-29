@@ -113,7 +113,7 @@ public class LoadPopupMenu extends JPopupMenu {
 
         // проверяем, чтобы учитель был не занят
         for (WorkingTeacher wt : workingTeachers) {
-            if (wt.getNames().equals(names)) {
+            if (Main.isThere(wt.getNames(), names)) {
                 ArrayList<Pair> pairs = wt.getPairs();
                 for (Pair pair : pairs) {
                     if (pair.getRow() == row) {

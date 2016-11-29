@@ -3,6 +3,7 @@ package by.dmitrui98;
 import by.dmitrui98.data.Teacher;
 import by.dmitrui98.data.TeacherColumn;
 import by.dmitrui98.data.WorkingTeacher;
+import by.dmitrui98.enums.TypeHour;
 import by.dmitrui98.gui.TimetableNorthPanel;
 import by.dmitrui98.gui.TimetableMenuBar;
 import by.dmitrui98.utils.SQLiteConnection;
@@ -36,6 +37,8 @@ public class Main {
 
         connectToDatabase();
 
+        readTeacherColumns();
+
         TimetableMenuBar menuBar = new TimetableMenuBar(this);
 
         northPanel = new TimetableNorthPanel(this);
@@ -47,8 +50,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new MyWindowListener());
 
-        //frame.pack();
-        frame.setSize(700, 400);
+        frame.setSize(900, 600);
         frame.setVisible(true);
     }
 
@@ -56,23 +58,22 @@ public class Main {
 
         @Override
         public void windowClosing(WindowEvent e) {
-//            Object[] options = { "Да", "Нет!" };
-//            int n = JOptionPane.showOptionDialog(e.getWindow(), "Закрыть окно?",
-//                            "Подтверждение", JOptionPane.YES_NO_OPTION,
-//                            JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-//            if (n == 0) {
-//                e.getWindow().setVisible(false);
+            Object[] options = { "Да!", "Нет" };
+            int n = JOptionPane.showOptionDialog(e.getWindow(), "Все несохраненные данные будут потеряны",
+                            "Закрыть окно?", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (n == 0) {
+                e.getWindow().setVisible(false);
 
+                try {
+                    if (con != null)
+                        con.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
 
-            try {
-                if (con != null)
-                    con.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+                System.exit(0);
             }
-
-            System.exit(0);
-            //}
         }
 
         @Override
@@ -124,14 +125,16 @@ public class Main {
     }
 
     private void connectToDatabase() {
+        // создание подключения к базе данных по пути, указанному в урле
+        String url = "jdbc:sqlite:d:\\курсачJAVA\\1\\timetable1.db";
+        con = SQLiteConnection.getConnection(url, "org.sqlite.JDBC");
+    }
+
+    public void readTeacherColumns() {
+        teacherColumns.clear();
+
         try {
-            // создание подключения к базе данных по пути, указанному в урле
-            String url = "jdbc:sqlite:d:\\курсачJAVA\\1\\timetable1.db";
-            con = SQLiteConnection.getConnection(url, "org.sqlite.JDBC");
-
-
             Statement st = con.createStatement();
-
             ResultSet allGroup = st.executeQuery("SELECT * FROM spr_group");
             ArrayList<Integer> listGroup = new ArrayList<Integer>();
             while (allGroup.next())
@@ -158,7 +161,6 @@ public class Main {
                 }
                 teacherColumns.add(new TeacherColumn(teacherRowList, group));
             }
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -174,5 +176,40 @@ public class Main {
 
     public TimetableNorthPanel getNorthPanel() {
         return northPanel;
+    }
+
+    public static String format(String str, TypeHour th) {
+        StringBuilder sb = new StringBuilder(str);
+
+        if (th == TypeHour.NUMERATOR)
+            sb.append("(числ)");
+        if (th == TypeHour.DENOMINATOR)
+            sb.append("(знам)");
+        if (th == TypeHour.COMBO)
+            sb.append("(2 часа)");
+        return sb.toString();
+    }
+
+    public static String format(String one, String two, TypeHour th) {
+        StringBuffer sb = new StringBuffer(two);
+        //sb.delete(sb.indexOf("("), sb.length());
+        two = sb.toString();
+
+        if (th == TypeHour.NUMERATOR) {
+            return one + "(числ)|" + two + "(знам)";
+        } else if (th == TypeHour.DENOMINATOR) {
+            return two + "(числ)|" + one + "(знам)";
+        }
+        return null;
+    }
+
+    public static boolean isThere(ArrayList<String> a, ArrayList<String> b) {
+        for (String name : a) {
+            for (String n : b) {
+                if (name.equals(n))
+                    return true;
+            }
+        }
+        return false;
     }
 }

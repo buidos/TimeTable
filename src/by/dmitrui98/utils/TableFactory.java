@@ -13,7 +13,9 @@ import by.dmitrui98.tableRenderer.LoadCellRenderer;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -23,8 +25,13 @@ import java.util.ArrayList;
  */
 public class TableFactory {
 
+    private static int cellHeight = 20;
+    private static int cellWidth = 130;
+
     private JTable teacherTable;
     private JTable loadTable;
+    private JTable dayTable;
+    private JTable pairTable;
 
     private ArrayList<WorkingTeacher> workingTeachers;
 
@@ -33,8 +40,10 @@ public class TableFactory {
     }
 
     public JTable createPair(int colDay) {
-        JTable pairTable = new JTable(new PairTableModel(colDay * Main.COUNT_PAIR));
+        pairTable = new JTable(new PairTableModel(colDay * Main.COUNT_PAIR));
         pairTable.setRowSelectionAllowed(false);
+        pairTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        pairTable.setRowHeight(cellHeight);
 
         return pairTable;
     }
@@ -50,9 +59,19 @@ public class TableFactory {
             days[i] = new Object[] {getDay(dayCriteria.get(i))};
         }
 
-        JTable dayTable = new JTable(new DayTableModel(days, dayName));
+        dayTable = new JTable(new DayTableModel(days, dayName));
         dayTable.setRowSelectionAllowed(false);
         dayTable.setRowHeight(heigh * Main.COUNT_PAIR);
+        dayTable.getColumnModel().getColumn(0).setMaxWidth(50);
+
+        dayTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                c.setFont(new Font("TimesRoman", Font.PLAIN, 18));
+                return c;
+            }
+        });
 
         return dayTable;
     }
@@ -75,12 +94,18 @@ public class TableFactory {
 
         teacherTable.addMouseListener(new TeacherMouseListener());
         teacherTable.getModel().addTableModelListener(new TeacherTableModelListener());
+        teacherTable.setRowHeight(cellHeight);
 
 
         TableModel tModel = teacherTable.getModel();
 
-        for (int i = 1; i < tModel.getColumnCount(); i+=2) {
-            teacherTable.getColumnModel().getColumn(i).setPreferredWidth(Main.HOUR_WIDTH);
+        for (int i = 0; i < tModel.getColumnCount(); i++) {
+            if (i % 2 != 0) {
+                teacherTable.getColumnModel().getColumn(i).setMaxWidth(Main.HOUR_WIDTH);
+                teacherTable.getColumnModel().getColumn(i).setMinWidth(Main.HOUR_WIDTH);
+            }
+            else
+                teacherTable.getColumnModel().getColumn(i).setMinWidth(cellWidth);
         }
 
         return teacherTable;
@@ -90,6 +115,15 @@ public class TableFactory {
         loadTable = new JTable(new LoadTableModel(workingTeachers, dayCriteria, selectedGroup));
         loadTable.setRowSelectionAllowed(false);
         loadTable.setDefaultRenderer(Object.class, new LoadCellRenderer(this));
+        loadTable.setRowHeight(cellHeight);
+
+        loadTable.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+
+        TableModel tModel = loadTable.getModel();
+        for (int i = 0; i < tModel.getColumnCount(); i++) {
+            loadTable.getColumnModel().getColumn(i).setMinWidth(cellWidth);
+        }
+
 
         loadTable.addMouseListener(new LoadMouseListener());
 
@@ -313,5 +347,13 @@ public class TableFactory {
 
     public LoadPopupMenu getPopup() {
         return popup;
+    }
+
+    public JTable getDayTable() {
+        return dayTable;
+    }
+
+    public JTable getPairTable() {
+        return pairTable;
     }
 }
