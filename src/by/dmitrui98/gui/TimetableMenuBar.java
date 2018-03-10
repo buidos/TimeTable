@@ -4,7 +4,7 @@ import by.dmitrui98.Main;
 import by.dmitrui98.data.TeacherColumn;
 import by.dmitrui98.data.WorkingTeacher;
 
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import by.dmitrui98.gui.editDatabase.EditDatabaseFrame;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -57,6 +57,9 @@ public class TimetableMenuBar extends JMenuBar {
         JMenuItem teacherTableMenuItem = new JMenuItem("расписание преподавателей");
         teacherTableMenuItem.addActionListener(new TeacherMenuListener());
 
+        JMenuItem editDatabaseMenuItem = new JMenuItem("редактировать базу данных");
+        editDatabaseMenuItem.addActionListener(new EditDatabaseMenuListener());
+
         JMenuItem excelMenuItem = new JMenuItem("вывести в excel");
         excelMenuItem.addActionListener(new ExcelMenuListener());
 
@@ -64,6 +67,7 @@ public class TimetableMenuBar extends JMenuBar {
         referenceMenuItem.addActionListener(new ReferenceMenuListener());
 
         serviceMenu.add(teacherTableMenuItem);
+        serviceMenu.add(editDatabaseMenuItem);
         serviceMenu.add(referenceMenuItem);
         serviceMenu.add(excelMenuItem);
 
@@ -172,8 +176,6 @@ public class TimetableMenuBar extends JMenuBar {
         }
     }
 
-    HintTextField tfMask;
-    JTable table;
     class TeacherMenuListener implements ActionListener {
 
         @Override
@@ -182,6 +184,18 @@ public class TimetableMenuBar extends JMenuBar {
 
             tFrame.setSize(new Dimension(900, 400));
             tFrame.setVisible(true);
+        }
+    }
+
+    class EditDatabaseMenuListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFrame frame = new EditDatabaseFrame("Редактирование базы данных", main);
+
+
+            frame.setSize(new Dimension(1200, 600));
+            frame.setVisible(true);
         }
     }
 

@@ -75,7 +75,7 @@ public class TimetableNorthPanel extends JPanel {
         MyChangeListener changeListener = new MyChangeListener();
 
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBorder(BorderFactory.createTitledBorder("установите необходимые критерии:"));
+        panel.setBorder(BorderFactory.createTitledBorder("Установите необходимые критерии:"));
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -124,35 +124,42 @@ public class TimetableNorthPanel extends JPanel {
 
         c.gridx = 3;
         c.gridy = 0;
+        checkBox = new JCheckBox("моб");
+        panel.add(checkBox, c);
+        checkBox.addActionListener(changeListener);
+        checkBoxList.add(checkBox);
+
+        c.gridx = 4;
+        c.gridy = 0;
         checkBox = new JCheckBox("пн");
         panel.add(checkBox, c);
         checkBoxList.add(checkBox);
 
-        c.gridx = 3;
+        c.gridx = 4;
         c.gridy = 1;
         checkBox = new JCheckBox("вт");
         panel.add(checkBox, c);
         checkBoxList.add(checkBox);
 
-        c.gridx = 4;
+        c.gridx = 5;
         c.gridy = 0;
         checkBox = new JCheckBox("ср");
         panel.add(checkBox, c);
         checkBoxList.add(checkBox);
 
-        c.gridx = 4;
+        c.gridx = 5;
         c.gridy = 1;
         checkBox = new JCheckBox("чт");
         panel.add(checkBox, c);
         checkBoxList.add(checkBox);
 
-        c.gridx = 5;
+        c.gridx = 6;
         c.gridy = 0;
         checkBox = new JCheckBox("пт");
         panel.add(checkBox, c);
         checkBoxList.add(checkBox);
 
-        c.gridx = 5;
+        c.gridx = 6;
         c.gridy = 1;
         checkBox = new JCheckBox("сб");
         panel.add(checkBox, c);
@@ -165,10 +172,10 @@ public class TimetableNorthPanel extends JPanel {
 
     JScrollPane scrollerPred;
     private void showTable(ArrayList<TeacherColumn> teacherColumns) {
-        ArrayList <Integer> dayCriteria = new ArrayList<Integer>();
-        for (int i = 6; i < checkBoxList.size(); i++) {
+        ArrayList <Integer> dayCriteria = new ArrayList<>();
+        for (int i = 7; i < checkBoxList.size(); i++) {
             if (checkBoxList.get(i).isSelected())
-                dayCriteria.add(new Integer(i-6));
+                dayCriteria.add(new Integer(i-7));
         }
 
         int colDay = dayCriteria.size();
@@ -223,6 +230,7 @@ public class TimetableNorthPanel extends JPanel {
             scroller = new JScrollPane(mainPanel);
             scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
             scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            scroller.getVerticalScrollBar().setUnitIncrement(16);
 
 
             frame.getContentPane().add(BorderLayout.CENTER, scroller);
@@ -251,7 +259,7 @@ public class TimetableNorthPanel extends JPanel {
             }
 
             ArrayList<Integer> depCriteria = new ArrayList<Integer>();
-            for (int i = 4; i < 6; i++) {
+            for (int i = 4; i < 7; i++) {
                 if (checkBoxList.get(i).isSelected())
                     depCriteria.add(new Integer(i - 3));
             }

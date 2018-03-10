@@ -49,6 +49,7 @@ public class TeacherRaspFrame extends JFrame {
         }
 
         JScrollPane scroller = new JScrollPane(table, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scroller.getVerticalScrollBar().setUnitIncrement(16);
 
         JPanel panel = new JPanel();
         BoxLayout bl = new BoxLayout(panel, BoxLayout.Y_AXIS);

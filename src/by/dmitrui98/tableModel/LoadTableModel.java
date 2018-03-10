@@ -19,7 +19,8 @@ public class LoadTableModel extends AbstractTableModel {
 
     ArrayList<Integer> dayCriteria;
 
-    public LoadTableModel(ArrayList<WorkingTeacher> workingTeachers, ArrayList<Integer> dayCriteria, ArrayList<Integer> sg) {
+    public LoadTableModel(ArrayList<WorkingTeacher> workingTeachers, ArrayList<Integer> dayCriteria,
+                          ArrayList<Integer> selectedGroup) {
         super();
 
         this.dayCriteria = dayCriteria;
@@ -27,21 +28,21 @@ public class LoadTableModel extends AbstractTableModel {
 
         contents = new Object[row][];
         for (int i = 0; i < contents.length; i++) {
-            contents[i] = new Object[sg.size()];
+            contents[i] = new Object[selectedGroup.size()];
             for (int j = 0; j < contents[i].length; j++)
                 contents[i][j] = "";
         }
 
-        columnNames = new String[sg.size()];
-        for (int i = 0; i < sg.size(); i++) {
-            columnNames[i] = String.valueOf(sg.get(i));
+        columnNames = new String[selectedGroup.size()];
+        for (int i = 0; i < selectedGroup.size(); i++) {
+            columnNames[i] = String.valueOf(selectedGroup.get(i));
         }
 
         for (WorkingTeacher wt : workingTeachers) {
             for (Pair p : wt.getPairs()) {
                 int r = defineRow(p.getRow());
                 if (r != -1) {
-                    int c = sg.indexOf(p.getGroup());
+                    int c = selectedGroup.indexOf(p.getGroup());
 
                     if (!contents[r][c].equals("")) {
                         ArrayList<WorkingTeacher> list = new ArrayList<WorkingTeacher>();

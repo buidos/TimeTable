@@ -50,6 +50,7 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new MyWindowListener());
 
+        //frame.setLocationRelativeTo(null);
         frame.setSize(900, 600);
         frame.setVisible(true);
     }
@@ -58,9 +59,9 @@ public class Main {
 
         @Override
         public void windowClosing(WindowEvent e) {
-            Object[] options = { "Да!", "Нет" };
-            int n = JOptionPane.showOptionDialog(e.getWindow(), "Все несохраненные данные будут потеряны",
-                            "Закрыть окно?", JOptionPane.YES_NO_OPTION,
+            Object[] options = { "Да", "Нет" };
+            int n = JOptionPane.showOptionDialog(e.getWindow(), "Закрыть программу?",
+                            "Несохраненные данные будут потеряны", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             if (n == 0) {
                 e.getWindow().setVisible(false);
@@ -126,7 +127,7 @@ public class Main {
 
     private void connectToDatabase() {
         // создание подключения к базе данных по пути, указанному в урле
-        String url = "jdbc:sqlite:d:\\курсачJAVA\\1\\timetable1.db";
+        String url = "jdbc:sqlite:timetable1.db";
         con = SQLiteConnection.getConnection(url, "org.sqlite.JDBC");
     }
 
