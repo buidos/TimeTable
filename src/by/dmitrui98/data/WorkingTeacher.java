@@ -47,17 +47,17 @@ public class WorkingTeacher implements Serializable {
         return pairs;
     }
 
-    public Pair getPair(int row, int col, TypeHour th) {
+    public Pair getPair(int row, String group, TypeHour th) {
         for (Pair pair : pairs) {
-            if (pair.getRow() == row && pair.getGroup() == col && pair.getTypeHour() == th)
+            if (pair.getRow() == row && pair.getGroup().equals(group) && pair.getTypeHour() == th)
                 return pair;
         }
         return null;
     }
 
-    public Pair getPair(int row, int col) {
+    public Pair getPair(int row, String group) {
         for (Pair pair : pairs) {
-            if (pair.getRow() == row && pair.getGroup() == col)
+            if (pair.getRow() == row && pair.getGroup().equals(group))
                 return pair;
         }
         return null;

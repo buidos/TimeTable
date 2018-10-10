@@ -31,7 +31,7 @@ public class LoadPopupMenu extends JPopupMenu {
 
     private ArrayList<WorkingTeacher> workingTeachers;
 
-    private int groupCol;
+    private String groupCol;
 
 
     public LoadPopupMenu(TableFactory tf) {
@@ -45,7 +45,7 @@ public class LoadPopupMenu extends JPopupMenu {
         dayCriteria = tf.getDayCriteria();
         workingTeachers = tf.getWorkingTeachers();
 
-        groupCol = Integer.parseInt((String) loadTable.getTableHeader().getColumnModel().getColumn(loadCol).getHeaderValue());
+        groupCol = (String) loadTable.getTableHeader().getColumnModel().getColumn(loadCol).getHeaderValue();
 
 
         JMenuItem item = new JMenuItem("числитель");

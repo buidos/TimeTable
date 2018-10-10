@@ -113,7 +113,7 @@ public class TeacherRaspFrame extends JFrame {
                         int r = getRow(p.getRow());
                         int c = getCol(p.getRow());
 
-                        String group = Integer.toString(p.getGroup());
+                        String group = p.getGroup();
                         if (!table.getValueAt(r, c).equals("")) {
                             String one = (String) table.getValueAt(r,c);
                             table.setValueAt(format(group, one, p.getTypeHour()), r, c);

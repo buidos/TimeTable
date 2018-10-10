@@ -20,7 +20,7 @@ public class LoadTableModel extends AbstractTableModel {
     ArrayList<Integer> dayCriteria;
 
     public LoadTableModel(ArrayList<WorkingTeacher> workingTeachers, ArrayList<Integer> dayCriteria,
-                          ArrayList<Integer> selectedGroup) {
+                          ArrayList<String> selectedGroup) {
         super();
 
         this.dayCriteria = dayCriteria;
@@ -35,7 +35,7 @@ public class LoadTableModel extends AbstractTableModel {
 
         columnNames = new String[selectedGroup.size()];
         for (int i = 0; i < selectedGroup.size(); i++) {
-            columnNames[i] = String.valueOf(selectedGroup.get(i));
+            columnNames[i] = selectedGroup.get(i);
         }
 
         for (WorkingTeacher wt : workingTeachers) {
@@ -43,14 +43,16 @@ public class LoadTableModel extends AbstractTableModel {
                 int r = defineRow(p.getRow());
                 if (r != -1) {
                     int c = selectedGroup.indexOf(p.getGroup());
-
-                    if (!contents[r][c].equals("")) {
-                        ArrayList<WorkingTeacher> list = new ArrayList<WorkingTeacher>();
-                        list.add((WorkingTeacher) contents[r][c]);
-                        list.add(wt);
-                        contents[r][c] = list;
-                    } else
-                        contents[r][c] = wt;
+                    // если группа есть в отображаемой таблице
+                    if (c != -1) {
+                        if (!contents[r][c].equals("")) {
+                            ArrayList<WorkingTeacher> list = new ArrayList<WorkingTeacher>();
+                            list.add((WorkingTeacher) contents[r][c]);
+                            list.add(wt);
+                            contents[r][c] = list;
+                        } else
+                            contents[r][c] = wt;
+                    }
                 }
             }
         }

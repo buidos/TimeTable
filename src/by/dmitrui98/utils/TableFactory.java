@@ -111,7 +111,7 @@ public class TableFactory {
         return teacherTable;
     }
 
-    public JTable createLoad(ArrayList<Integer> selectedGroup, ArrayList<Integer> dayCriteria) {
+    public JTable createLoad(ArrayList<String> selectedGroup, ArrayList<Integer> dayCriteria) {
         loadTable = new JTable(new LoadTableModel(workingTeachers, dayCriteria, selectedGroup));
         loadTable.setRowSelectionAllowed(false);
         loadTable.setDefaultRenderer(Object.class, new LoadCellRenderer(this));
@@ -133,9 +133,9 @@ public class TableFactory {
     public boolean isEmptyCombo(int r) {
         ArrayList<String> names = selectedTeacher.getNames();
         int row = defineRow(r);
-        // проверяем, чтобы учитель был не занят
+        // проверяем, чтобы учитель не был занят
         for (WorkingTeacher wt : workingTeachers) {
-            if (wt.getNames().equals(names)) {
+            if (Main.isThere(wt.getNames(), names)) {
                 ArrayList<Pair> pairs = wt.getPairs();
                 for (Pair p : pairs) {
                     if (p.getRow() == row)
@@ -219,7 +219,7 @@ public class TableFactory {
             if (e.getButton() == MouseEvent.BUTTON1) {
                 int row = loadTable.getSelectedRow();
                 int col = loadTable.getSelectedColumn();
-                int groupCol = Integer.parseInt((String) loadTable.getTableHeader().getColumnModel().getColumn(col).getHeaderValue());
+                String groupCol = (String) loadTable.getTableHeader().getColumnModel().getColumn(col).getHeaderValue();
 
                 if (loadTable.getValueAt(row, col).equals("")) {
                     if ((selectedTeacher != null) && (teacherCol / 2 == col)) {

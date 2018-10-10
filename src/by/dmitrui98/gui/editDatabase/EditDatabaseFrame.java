@@ -3,6 +3,7 @@ package by.dmitrui98.gui.editDatabase;
 import by.dmitrui98.Main;
 import by.dmitrui98.dao.DepartmentDao;
 import by.dmitrui98.dao.GroupDao;
+import by.dmitrui98.dao.LoadDao;
 import by.dmitrui98.dao.TeacherDao;
 import by.dmitrui98.entity.Group;
 import by.dmitrui98.entity.Department;
@@ -28,12 +29,14 @@ public class EditDatabaseFrame extends JFrame {
     private GroupDao groupDao;
     private TeacherDao teacherDao;
     private DepartmentDao departmentDao;
+    private LoadDao loadDao;
 
     public EditDatabaseFrame(String name, Main main) {
         super(name);
         groupDao = new GroupDao(main.getCon());
         departmentDao = new DepartmentDao(main.getCon());
         teacherDao = new TeacherDao(main.getCon());
+        loadDao = new LoadDao(main.getCon());
         generateGui();
     }
 
@@ -60,6 +63,7 @@ public class EditDatabaseFrame extends JFrame {
         groupPanel.add(groupScroller, BorderLayout.CENTER);
         tabbedPane.addTab("Группы", groupPanel);
 
+        // учителя
         JPanel teacherPanel = new JPanel();
         teacherPanel.setLayout(new BorderLayout());
         JTable teacherTable = new JTable(new TeacherTableModel(teacherDao));
@@ -79,7 +83,8 @@ public class EditDatabaseFrame extends JFrame {
         teacherPanel.add(teacherScroller, BorderLayout.CENTER);
         tabbedPane.addTab("Учителя", teacherPanel);
 
-        LoadPanel loadPanel = new LoadPanel(teacherDao, groupDao);
+        // нагрузка
+        LoadPanel loadPanel = new LoadPanel(teacherDao, groupDao, loadDao);
         tabbedPane.addTab("Нагрузка", loadPanel);
 
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);

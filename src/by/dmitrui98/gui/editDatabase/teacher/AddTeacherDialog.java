@@ -1,8 +1,8 @@
 package by.dmitrui98.gui.editDatabase.teacher;
 
 import by.dmitrui98.dao.TeacherDao;
-import by.dmitrui98.data.Department;
-import by.dmitrui98.data.Group;
+//import by.dmitrui98.data.Department;
+//import by.dmitrui98.data.Group;
 import by.dmitrui98.entity.Teacher;
 
 import javax.swing.*;

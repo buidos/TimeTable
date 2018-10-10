@@ -22,8 +22,8 @@ public class Main {
     private Connection con;
     private JFrame frame;
 
-    private ArrayList <TeacherColumn> teacherColumns = new ArrayList<TeacherColumn>();
-    private ArrayList<WorkingTeacher> workingTeachers = new ArrayList<WorkingTeacher>();
+    private ArrayList <TeacherColumn> teacherColumns = new ArrayList<>();
+    private ArrayList<WorkingTeacher> workingTeachers = new ArrayList<>();
 
     TimetableNorthPanel northPanel;
 
@@ -129,6 +129,12 @@ public class Main {
         // создание подключения к базе данных по пути, указанному в урле
         String url = "jdbc:sqlite:timetable1.db";
         con = SQLiteConnection.getConnection(url, "org.sqlite.JDBC");
+        // активируем каскадность во внешних ключах
+        try {
+            con.prepareStatement("PRAGMA foreign_keys = ON;");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void readTeacherColumns() {
@@ -137,11 +143,11 @@ public class Main {
         try {
             Statement st = con.createStatement();
             ResultSet allGroup = st.executeQuery("SELECT * FROM spr_group");
-            ArrayList<Integer> listGroup = new ArrayList<Integer>();
+            ArrayList<String> listGroup = new ArrayList<>();
             while (allGroup.next())
-                listGroup.add((Integer) allGroup.getObject("value_"));
+                listGroup.add((String) allGroup.getObject("value_"));
 
-            for (int group : listGroup) {
+            for (String group : listGroup) {
                 ArrayList<Teacher> teacherRowList = new ArrayList<Teacher>();
 
                 ResultSet result = st.executeQuery("SELECT * FROM mainTable WHERE group_value = " + group + " ORDER BY id");

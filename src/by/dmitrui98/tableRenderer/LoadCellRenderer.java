@@ -39,7 +39,7 @@ public class LoadCellRenderer extends DefaultTableCellRenderer {
         else
             teacherCol = -1;
 
-        int groupCol = Integer.parseInt((String) table.getTableHeader().getColumnModel().getColumn(column).getHeaderValue());
+        String groupCol = (String) table.getTableHeader().getColumnModel().getColumn(column).getHeaderValue();
 
         if (value instanceof WorkingTeacher) {
             WorkingTeacher wt = (WorkingTeacher) value;
@@ -82,7 +82,7 @@ public class LoadCellRenderer extends DefaultTableCellRenderer {
     private String format(JTable table, Object value, int r, int c) {
         int row = tb.defineRow(r);
 
-        int group = Integer.parseInt((String) table.getTableHeader().getColumnModel().getColumn(c).getHeaderValue());
+        String group = (String) table.getTableHeader().getColumnModel().getColumn(c).getHeaderValue();
 
         if (value instanceof WorkingTeacher) {
            WorkingTeacher wt = (WorkingTeacher) value;

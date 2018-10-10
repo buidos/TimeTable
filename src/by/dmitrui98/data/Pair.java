@@ -9,10 +9,10 @@ import java.io.Serializable;
  */
 public class Pair implements Serializable {
     private int row;
-    private int group;
+    private String group;
     private TypeHour typeHour;
 
-    public Pair(int row, int group, TypeHour typeHour) {
+    public Pair(int row, String group, TypeHour typeHour) {
         this.row = row;
         this.group = group;
         this.typeHour = typeHour;
@@ -22,7 +22,7 @@ public class Pair implements Serializable {
         return row;
     }
 
-    public int getGroup() {
+    public String getGroup() {
         return group;
     }
 

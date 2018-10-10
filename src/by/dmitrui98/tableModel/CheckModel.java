@@ -11,7 +11,7 @@ public class CheckModel extends AbstractTableModel {
 
     private int rows;
     private List<Boolean> rowList = new ArrayList<>();
-    private Set<Integer> selectedGroup = new TreeSet<Integer>();
+    private Set<Integer> selectedGroup = new TreeSet<>();
 
     public CheckModel() {
 

@@ -4,7 +4,7 @@ import by.dmitrui98.Main;
 import by.dmitrui98.data.TeacherColumn;
 import by.dmitrui98.data.WorkingTeacher;
 import by.dmitrui98.tableModel.CheckModel;
-import by.dmitrui98.utils.*;
+import by.dmitrui98.utils.TableFactory;
 
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
@@ -12,21 +12,21 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
 
-/**
- * Created by Администратор on 24.10.2016.
- */
 public class TimetableNorthPanel extends JPanel {
     Main m;
 
     private JFrame groupFrame = new JFrame("Отображаемые группы");
 
-    private ArrayList <JCheckBox> checkBoxList = new ArrayList<JCheckBox>();
-    private ArrayList <Integer> listGroup = new ArrayList<Integer>();
+    private ArrayList <JCheckBox> checkBoxList = new ArrayList<>();
+    private ArrayList <String> listGroup = new ArrayList<>();
 
     private CheckModel groupModel = new CheckModel();
     private boolean isChangedCriteria;
@@ -274,7 +274,7 @@ public class TimetableNorthPanel extends JPanel {
                     Integer course = (Integer) result.getObject("course");
                     Integer dep = (Integer) result.getObject("department_id");
                     if ((courseCriteria.contains(course)) && (depCriteria.contains(dep)))
-                        listGroup.add((Integer) result.getObject("value_"));
+                        listGroup.add((String) result.getObject("value_"));
                 }
 
             } catch (SQLException ex) {
@@ -312,7 +312,7 @@ public class TimetableNorthPanel extends JPanel {
         }
     }
 
-    ArrayList <Integer> selectedGroup = new ArrayList<Integer>();
+    ArrayList <String> selectedGroup = new ArrayList<>();
     class ButtonShowListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             teacherColumns = m.getTeacherColumns();

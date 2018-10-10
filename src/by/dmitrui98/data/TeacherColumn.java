@@ -8,9 +8,9 @@ import java.util.ArrayList;
  */
 public class TeacherColumn implements Serializable {
     private ArrayList <Teacher> teacherList = new ArrayList<Teacher>();
-    private int group;
+    private String group;
 
-    public TeacherColumn(ArrayList<Teacher> teacherRow, int group) {
+    public TeacherColumn(ArrayList<Teacher> teacherRow, String group) {
         this.teacherList = teacherRow;
         this.group = group;
     }
@@ -20,7 +20,7 @@ public class TeacherColumn implements Serializable {
         return teacherList;
     }
 
-    public int getGroup() {
+    public String getGroup() {
         return group;
     }
 }

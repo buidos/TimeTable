@@ -1,6 +1,7 @@
 package by.dmitrui98.gui.editDatabase;
 
 import by.dmitrui98.dao.GroupDao;
+import by.dmitrui98.dao.LoadDao;
 import by.dmitrui98.dao.TeacherDao;
 import by.dmitrui98.data.TeachersHour;
 import by.dmitrui98.entity.Group;
@@ -12,10 +13,7 @@ import by.dmitrui98.tableModel.editDatabase.LoadTableModel;
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +24,7 @@ import java.util.List;
 public class LoadPanel extends JPanel {
 
     private List<Teacher> teachers;
+    private LoadDao loadDao;
 
     private List<TeachersHour> teachersHourList = new ArrayList<>();
     private List<Teacher> bunchTeachers = new ArrayList<>();
@@ -37,8 +36,9 @@ public class LoadPanel extends JPanel {
     private JComboBox<Group> groupJComboBox;
     JTextField hourTextField;
 
-    public LoadPanel(TeacherDao teacherDao, GroupDao groupDao) {
+    public LoadPanel(TeacherDao teacherDao, GroupDao groupDao, LoadDao loadDao) {
         this.teachers = teacherDao.getAll();
+        this.loadDao = loadDao;
         List<Group> groups = groupDao.getAll();
 
         JPanel teacherPanel = generateTeacherPanel();
@@ -50,9 +50,6 @@ public class LoadPanel extends JPanel {
 
         JPanel northPanel = generateNorthPanel(groups);
         JPanel eastPanel = generateEastPanel();
-
-
-
 
         this.setLayout(new BorderLayout());
         this.add(northPanel, BorderLayout.NORTH);
@@ -101,11 +98,10 @@ public class LoadPanel extends JPanel {
             bunchTeachers = new ArrayList<>();
             bunchTable.setModel(new BunchTableModel(bunchTeachers));
         });
-        JButton addLoadButton = new JButton("Добавить нагрузку выбранной группе");
-        addLoadButton.addActionListener(e -> {
-            Group selectedGroup = (Group) groupJComboBox.getSelectedItem();
 
-        });
+        JButton addLoadButton = new JButton("Установить нагрузку выбранной группе");
+        addLoadButton.addActionListener(new LoadActionListener());
+
         JLabel label = new JLabel("Часы в неделю:");
         hourTextField = new JTextField(10);
         panel.add(new JLabel("Группа:"));
@@ -292,6 +288,28 @@ public class LoadPanel extends JPanel {
         @Override
         public void mouseExited(MouseEvent e) {
 
+        }
+    }
+
+    private class LoadActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Group selectedGroup = (Group) groupJComboBox.getSelectedItem();
+            Object[] options = { "Да", "Нет" };
+            int n = JOptionPane.showOptionDialog(getParent(), "Установить нагрузку для группы "+selectedGroup.getName() + "?",
+                    "Предыдущая нагрузка будет удалена", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (n != 0)
+                return;
+            try {
+                loadDao.insert(teachersHourList, selectedGroup);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(getParent(), "Ошибка при обновлении нагрузки");
+                return;
+            }
+            JOptionPane.showMessageDialog(getParent(), "Нагрузка группы успешно обновлена");
+            teachersHourList = new ArrayList<>();
+            loadTable.setModel(new LoadTableModel(teachersHourList));
         }
     }
 }
