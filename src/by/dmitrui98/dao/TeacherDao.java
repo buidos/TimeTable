@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Администратор on 28.01.2018.
  */
-public class TeacherDao {
+public class TeacherDao extends AbstractDao<Teacher> {
     private Connection con;
 
     public TeacherDao(Connection con) {
@@ -59,46 +59,37 @@ public class TeacherDao {
     }
 
 
-    public void insert(Teacher o) {
+    public void insert(Teacher o) throws SQLException {
         String sql = "INSERT INTO spr_teacher(surname, name, patronymic) VALUES(?,?,?)";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
+        try (PreparedStatement ps = con.prepareStatement(sql)){
             ps.setString(1, o.getSurname());
             ps.setString(2, o.getMiddlename());
             ps.setString(3, o.getLastname());
             ps.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
 
-    public void update(Teacher t) {
+    public void update(Teacher t) throws SQLException {
         String sql = "UPDATE spr_teacher SET surname = ? , "
                 + "name = ?, "
                 + "patronymic = ? "
                 + "WHERE id = ?";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, t.getSurname());
             ps.setString(2, t.getMiddlename());
             ps.setString(3, t.getLastname());
             ps.setInt(4, t.getId());
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void delete(Teacher o) {
+    public void delete(Teacher o) throws SQLException {
         String sql = "DELETE FROM spr_teacher where id = ?";
 
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, o.getId());
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

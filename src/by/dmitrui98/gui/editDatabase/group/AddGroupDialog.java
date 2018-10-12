@@ -78,7 +78,8 @@ public class AddGroupDialog extends JDialog {
                 groupDao.insert(group);
                 JOptionPane.showMessageDialog(dialog, "Группа успешно добавлена");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Неверно введены данные");
+                JOptionPane.showMessageDialog(dialog, "Ошибка при добавлении группы");
+                ex.printStackTrace();
             }
         }
     }

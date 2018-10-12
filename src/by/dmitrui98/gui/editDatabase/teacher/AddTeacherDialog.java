@@ -66,7 +66,8 @@ public class AddTeacherDialog extends JDialog {
                 teacherDao.insert(teacher);
                 JOptionPane.showMessageDialog(dialog, "Преподаватель успешно добавлен");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Неверно введены данные");
+                JOptionPane.showMessageDialog(dialog, "Ошибка при добавлении преподавателя");
+                ex.printStackTrace();
             }
         }
     }

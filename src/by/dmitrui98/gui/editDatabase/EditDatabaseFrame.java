@@ -19,6 +19,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +44,10 @@ public class EditDatabaseFrame extends JFrame {
 
     private void generateGui() {
         JTabbedPane tabbedPane = new JTabbedPane();
+
+        // отделения
+        JPanel depPanel = new JPanel();
+        depPanel.setLayout(new BorderLayout());
 
         // группы
         JPanel groupPanel = new JPanel();
@@ -103,7 +109,13 @@ public class EditDatabaseFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor((JButton)e.getSource());
-            List<Department> departments = departmentDao.getAll();
+            List<Department> departments = new ArrayList<>();
+            try {
+                departments = departmentDao.getAll();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(getParent(), "Ошибка при чтении отделений");
+            }
             AddGroupDialog addGroupDialog = new AddGroupDialog(topFrame, "Добавить группу", true, departments,
                     groupDao);
             addGroupDialog.pack();
@@ -130,7 +142,13 @@ public class EditDatabaseFrame extends JFrame {
                 Integer course = (Integer) groupTable.getValueAt(row, 2);
                 Department department = (Department) groupTable.getValueAt(row, 3);
                 Group group = new Group(id, name, course, department);
-                List<Department> departments = departmentDao.getAll();
+                List<Department> departments = null;
+                try {
+                    departments = departmentDao.getAll();
+                } catch (SQLException e1) {
+                    JOptionPane.showMessageDialog(getParent(), "Ошибка при чтении отделений");
+                    e1.printStackTrace();
+                }
                 EditGroupDialog editGroupDialog = new EditGroupDialog(topFrame, "Редактирование группы", true, departments,
                         groupDao, group);
                 editGroupDialog.pack();
@@ -173,6 +191,8 @@ public class EditDatabaseFrame extends JFrame {
                     }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(frame, "Ошибка при удалении");
+                    ex.printStackTrace();
+                    return;
                 } finally {
                     groupTable.setModel(new GroupTableModel(groupDao));
                 }
@@ -265,6 +285,8 @@ public class EditDatabaseFrame extends JFrame {
                     }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(frame, "Ошибка при удалении");
+                    ex.printStackTrace();
+                    return;
                 } finally {
                     teacherTable.setModel(new TeacherTableModel(teacherDao));
                 }

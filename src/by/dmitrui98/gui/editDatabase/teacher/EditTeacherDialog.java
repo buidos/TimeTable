@@ -74,7 +74,8 @@ public class EditTeacherDialog extends JDialog {
                 JOptionPane.showMessageDialog(dialog, "Преподаватель успешно изменен");
                 dialog.setVisible(false);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Неверно введены данные");
+                JOptionPane.showMessageDialog(dialog, "Ошибка при изменении преподавателя");
+                ex.printStackTrace();
             }
 
         }

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Администратор on 25.02.2018.
  */
-public class GroupDao {
+public class GroupDao extends AbstractDao<Group> {
 
     private Connection con;
 
@@ -22,6 +22,7 @@ public class GroupDao {
         depDao = new DepartmentDao(con);
     }
 
+    @Override
     public List<Group> getAll() {
         List<Group> groups = new ArrayList<>();
 
@@ -43,45 +44,39 @@ public class GroupDao {
         return groups;
     }
 
-    public void insert(Group o) {
+    @Override
+    public void insert(Group o) throws SQLException {
         String sql = "INSERT INTO spr_group (value_, course, department_id) VALUES(?,?,?)";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, o.getName());
             ps.setInt(2, o.getCourse());
             ps.setInt(3, o.getDepartment().getId());
             ps.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
     }
 
-    public void update(Group g) {
+    @Override
+    public void update(Group g) throws SQLException {
         String sql = "UPDATE spr_group SET value_ = ? , "
                 + "course = ?, "
                 + "department_id = ? "
                 + "WHERE id = ?";
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, g.getName());
             ps.setInt(2, g.getCourse());
             ps.setInt(3, g.getDepartment().getId());
             ps.setInt(4, g.getId());
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
-    public void delete(Group o) {
+    @Override
+    public void delete(Group o) throws SQLException {
         String sql = "DELETE FROM spr_group where id = ?";
 
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
+        try(PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, o.getId());
             ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }

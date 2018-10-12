@@ -5,6 +5,7 @@ import by.dmitrui98.dao.LoadDao;
 import by.dmitrui98.dao.TeacherDao;
 import by.dmitrui98.data.TeachersHour;
 import by.dmitrui98.entity.Group;
+import by.dmitrui98.entity.Load;
 import by.dmitrui98.entity.Teacher;
 import by.dmitrui98.gui.HintTextField;
 import by.dmitrui98.tableModel.editDatabase.BunchTableModel;
@@ -14,6 +15,7 @@ import javax.swing.*;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -302,9 +304,10 @@ public class LoadPanel extends JPanel {
             if (n != 0)
                 return;
             try {
-                loadDao.insert(teachersHourList, selectedGroup);
-            } catch (Exception ex) {
+                loadDao.insert(new Load(teachersHourList, selectedGroup));
+            } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(getParent(), "Ошибка при обновлении нагрузки");
+                ex.printStackTrace();
                 return;
             }
             JOptionPane.showMessageDialog(getParent(), "Нагрузка группы успешно обновлена");

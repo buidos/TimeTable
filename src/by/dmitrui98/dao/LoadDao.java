@@ -3,15 +3,17 @@ package by.dmitrui98.dao;
 
 import by.dmitrui98.data.TeachersHour;
 import by.dmitrui98.entity.Group;
+import by.dmitrui98.entity.Load;
 import by.dmitrui98.entity.Teacher;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 
 /**
  * Created by Администратор on 25.02.2018.
  */
-public class LoadDao {
+public class LoadDao extends AbstractDao<Load> {
 
     private Connection con;
 
@@ -22,18 +24,16 @@ public class LoadDao {
 
     /**
      * Вставляет нагрузку группы в базу данных
-     * @param teachersHourList объектов TeachersHour
-     * @param group - группа для которой вставляется нагрузка
      */
-    public void insert(List<TeachersHour> teachersHourList, Group group) {
-
+    @Override
+    public void insert(Load load) throws SQLException {
+        List<TeachersHour> teachersHourList = load.getTeachersHourList();
+        Group group = load.getGroup();
         // удаляем предыдущую нагрузку
         String sql = "DELETE FROM load WHERE group_id = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, group.getId());
             ps.executeUpdate();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         }
 
         String loadSql = "INSERT INTO load(group_id, hour) VALUES(?,?)";
@@ -50,16 +50,12 @@ public class LoadDao {
                 loadPs.executeUpdate();
                 ResultSet rs = st.executeQuery("SELECT last_insert_rowid() as id");
                 loadId = rs.getInt("id");
-            } catch (SQLException ex) {
-                ex.printStackTrace();
             }
             for (Teacher teacher : th.getTeachers()) {
                 try (PreparedStatement workingTeacherPs = con.prepareStatement(workingTeacherSql)) {
                     workingTeacherPs.setInt(1, loadId);
                     workingTeacherPs.setInt(2, teacher.getId());
                     workingTeacherPs.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
                 }
             }
         }

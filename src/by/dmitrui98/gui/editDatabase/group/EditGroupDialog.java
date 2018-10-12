@@ -89,7 +89,8 @@ public class EditGroupDialog extends JDialog {
                 JOptionPane.showMessageDialog(dialog, "Группа успешно изменена");
                 dialog.setVisible(false);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(dialog, "Неверно введены данные");
+                JOptionPane.showMessageDialog(dialog, "Ошибка при изменении группы");
+                ex.printStackTrace();
             }
 
         }
