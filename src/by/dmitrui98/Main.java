@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Main {
-    public static final int HOUR_WIDTH = 10;
+    public static final int HOUR_WIDTH = 18;
     public static final int COUNT_PAIR = 7;
 
     private Connection con;

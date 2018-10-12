@@ -250,43 +250,47 @@ public class TimetableNorthPanel extends JPanel {
         scrollerPred = scroller;
     }
 
+    private void updateGroup() {
+        isChangedCriteria = true;
+
+        listGroup.clear();
+        ArrayList<Integer> courseCriteria = new ArrayList<Integer>();
+        for (int i = 0; i < 4; i++) {
+            if (checkBoxList.get(i).isSelected())
+                courseCriteria.add(new Integer(i + 1));
+        }
+
+        ArrayList<Integer> depCriteria = new ArrayList<Integer>();
+        for (int i = 4; i < 7; i++) {
+            if (checkBoxList.get(i).isSelected())
+                depCriteria.add(new Integer(i - 3));
+        }
+
+        try {
+
+            Statement st = con.createStatement();
+            ResultSet result = st.executeQuery("SELECT * FROM spr_group");
+
+            // формируем список групп согласно критериям(отделение && курс)
+            while (result.next()) {
+                Integer course = (Integer) result.getObject("course");
+                Integer dep = (Integer) result.getObject("department_id");
+                if ((courseCriteria.contains(course)) && (depCriteria.contains(dep)))
+                    listGroup.add((String) result.getObject("value_"));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        groupModel = new CheckModel(listGroup.size());
+        groupFrame.dispose();
+    }
+
     private class MyChangeListener implements ActionListener {
 
         public void actionPerformed(ActionEvent ev) {
-            isChangedCriteria = true;
-
-            listGroup.clear();
-            ArrayList<Integer> courseCriteria = new ArrayList<Integer>();
-            for (int i = 0; i < 4; i++) {
-                if (checkBoxList.get(i).isSelected())
-                    courseCriteria.add(new Integer(i + 1));
-            }
-
-            ArrayList<Integer> depCriteria = new ArrayList<Integer>();
-            for (int i = 4; i < 7; i++) {
-                if (checkBoxList.get(i).isSelected())
-                    depCriteria.add(new Integer(i - 3));
-            }
-
-            try {
-
-                Statement st = con.createStatement();
-                ResultSet result = st.executeQuery("SELECT * FROM spr_group");
-
-                // формируем список групп согласно критериям(отделение && курс)
-                while (result.next()) {
-                    Integer course = (Integer) result.getObject("course");
-                    Integer dep = (Integer) result.getObject("department_id");
-                    if ((courseCriteria.contains(course)) && (depCriteria.contains(dep)))
-                        listGroup.add((String) result.getObject("value_"));
-                }
-
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-
-            groupModel = new CheckModel(listGroup.size());
-            groupFrame.dispose();
+            updateGroup();
         }
     }
 
@@ -302,6 +306,7 @@ public class TimetableNorthPanel extends JPanel {
             if (n == 0) {
                 getWorkingTeachers().clear();
                 m.readTeacherColumns();
+                updateGroup();
                 getBtnShow().doClick();
                 JOptionPane.showMessageDialog(getParent(), "База данных успешно обновлена");
             }

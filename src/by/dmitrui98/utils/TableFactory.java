@@ -9,6 +9,7 @@ import by.dmitrui98.enums.TypeHour;
 import by.dmitrui98.gui.LoadPopupMenu;
 import by.dmitrui98.tableModel.*;
 import by.dmitrui98.tableRenderer.LoadCellRenderer;
+import by.dmitrui98.tableRenderer.TeacherColumnCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -94,6 +95,7 @@ public class TableFactory {
 
         teacherTable.addMouseListener(new TeacherMouseListener());
         teacherTable.getModel().addTableModelListener(new TeacherTableModelListener());
+        teacherTable.setDefaultRenderer(Object.class, new TeacherColumnCellRenderer());
         teacherTable.setRowHeight(cellHeight);
 
 
