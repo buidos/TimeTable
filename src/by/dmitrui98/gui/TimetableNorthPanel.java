@@ -52,6 +52,10 @@ public class TimetableNorthPanel extends JPanel {
 
     private void buildGUI() {
 
+        JButton updateBDButton = new JButton("Обновить базу данных");
+        updateBDButton.addActionListener(new UpdateBDButtonListener());
+        this.add(updateBDButton);
+
         createCheckBoxes();
 
         createButtons();
@@ -286,6 +290,24 @@ public class TimetableNorthPanel extends JPanel {
         }
     }
 
+    private class UpdateBDButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+
+            Object[] options = { "Да", "Нет" };
+            int n = JOptionPane.showOptionDialog(getParent(), "Обновить базу данных?",
+                    "Расписание будет потеряно", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (n == 0) {
+                getWorkingTeachers().clear();
+                m.readTeacherColumns();
+                getBtnShow().doClick();
+                JOptionPane.showMessageDialog(getParent(), "База данных успешно обновлена");
+            }
+        }
+    }
+
     private class ButtonDisplayGroupListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (isChangedCriteria) {
@@ -340,5 +362,13 @@ public class TimetableNorthPanel extends JPanel {
 
     public TableFactory getTf() {
         return tf;
+    }
+
+    public ArrayList<WorkingTeacher> getWorkingTeachers() {
+        return workingTeachers;
+    }
+
+    public void setWorkingTeachers(ArrayList<WorkingTeacher> workingTeachers) {
+        this.workingTeachers = workingTeachers;
     }
 }

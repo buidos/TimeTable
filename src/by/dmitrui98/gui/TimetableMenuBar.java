@@ -191,7 +191,8 @@ public class TimetableMenuBar extends JMenuBar {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new EditDatabaseFrame("Редактирование базы данных", main);
+            JFrame frame = new EditDatabaseFrame("Редактирование базы данных[Внимание! " +
+                    "Текущее составленное расписание будет удалено]", main);
 
 
             frame.setSize(new Dimension(1200, 600));

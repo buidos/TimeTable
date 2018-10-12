@@ -148,7 +148,7 @@ public class Main {
                 listGroup.add((String) allGroup.getObject("value_"));
 
             for (String group : listGroup) {
-                ArrayList<Teacher> teacherRowList = new ArrayList<Teacher>();
+                ArrayList<Teacher> teacherRowList = new ArrayList();
 
                 ResultSet result = st.executeQuery("SELECT * FROM mainTable WHERE group_value = " + group + " ORDER BY id");
 
