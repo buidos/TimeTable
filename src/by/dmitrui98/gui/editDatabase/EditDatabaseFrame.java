@@ -16,6 +16,8 @@ import by.dmitrui98.tableModel.editDatabase.GroupTableModel;
 import by.dmitrui98.tableModel.editDatabase.TeacherTableModel;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,12 +44,14 @@ public class EditDatabaseFrame extends JFrame {
         generateGui();
     }
 
+    LoadPanel loadPanel;
     private void generateGui() {
         JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addChangeListener(new TabbedChangeListener());
 
         // отделения
-        JPanel depPanel = new JPanel();
-        depPanel.setLayout(new BorderLayout());
+//        JPanel depPanel = new JPanel();
+//        depPanel.setLayout(new BorderLayout());
 
         // группы
         JPanel groupPanel = new JPanel();
@@ -90,14 +94,13 @@ public class EditDatabaseFrame extends JFrame {
         tabbedPane.addTab("Учителя", teacherPanel);
 
         // нагрузка
-        LoadPanel loadPanel = new LoadPanel(teacherDao, groupDao, loadDao);
+        loadPanel = new LoadPanel(teacherDao, groupDao, loadDao);
         tabbedPane.addTab("Нагрузка", loadPanel);
 
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 //        this.getContentPane().add(groupPanel, BorderLayout.CENTER);
     }
 
-    // группы
     private class AddGroupActionListener implements ActionListener {
 
         private JTable groupTable;
@@ -203,7 +206,6 @@ public class EditDatabaseFrame extends JFrame {
         }
     }
 
-    // учителя
     private class AddTeacherActionListener implements ActionListener {
 
         private JTable teacherTable;
@@ -293,6 +295,19 @@ public class EditDatabaseFrame extends JFrame {
                 JOptionPane.showMessageDialog(frame, "Выбранные преподаватели удалены");
             } else {
                 JOptionPane.showMessageDialog(frame, "Выберите записи");
+            }
+        }
+    }
+
+    private class TabbedChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+            int index = tabbedPane.getSelectedIndex();
+            String tabName = tabbedPane.getTitleAt(index);
+            if (tabName.equals("Нагрузка")) {
+                loadPanel.setTeachers(teacherDao.getAll());
+                loadPanel.setGroups(groupDao.getAll());
             }
         }
     }

@@ -26,6 +26,7 @@ import java.util.List;
 public class LoadPanel extends JPanel {
 
     private List<Teacher> teachers;
+    private List<Group> groups;
     private LoadDao loadDao;
 
     private List<TeachersHour> teachersHourList = new ArrayList<>();
@@ -41,7 +42,7 @@ public class LoadPanel extends JPanel {
     public LoadPanel(TeacherDao teacherDao, GroupDao groupDao, LoadDao loadDao) {
         this.teachers = teacherDao.getAll();
         this.loadDao = loadDao;
-        List<Group> groups = groupDao.getAll();
+        groups = groupDao.getAll();
 
         JPanel teacherPanel = generateTeacherPanel();
         JPanel bunchPanel = generateBunchPanel();
@@ -50,7 +51,7 @@ public class LoadPanel extends JPanel {
         groupPanel.add(teacherPanel);
         groupPanel.add(bunchPanel);
 
-        JPanel northPanel = generateNorthPanel(groups);
+        JPanel northPanel = generateNorthPanel();
         JPanel eastPanel = generateEastPanel();
 
         this.setLayout(new BorderLayout());
@@ -74,12 +75,12 @@ public class LoadPanel extends JPanel {
         return panel;
     }
 
-    private JPanel generateNorthPanel(List<Group> groups) {
+
+
+    private JPanel generateNorthPanel() {
         JPanel panel = new JPanel();
         groupJComboBox = new JComboBox();
-        for (Group group : groups) {
-            groupJComboBox.addItem(group);
-        }
+        updateGroupJComboBox();
 
         JButton addHourButton = new JButton("Добавить часы");
         addHourButton.addActionListener(e -> {
@@ -314,5 +315,29 @@ public class LoadPanel extends JPanel {
             teachersHourList = new ArrayList<>();
             loadTable.setModel(new LoadTableModel(teachersHourList));
         }
+    }
+
+    private void updateGroupJComboBox() {
+        for (Group group : groups) {
+            groupJComboBox.addItem(group);
+        }
+    }
+
+    private void updateTeacherJList() {
+        DefaultListModel<Teacher> listModel = new DefaultListModel<>();
+        for (Teacher t : teachers) {
+            listModel.addElement(t);
+        }
+        teacherJList.setModel(listModel);
+    }
+
+    public void setTeachers(List<Teacher> teachers) {
+        this.teachers = teachers;
+        updateTeacherJList();
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+        updateGroupJComboBox();
     }
 }
