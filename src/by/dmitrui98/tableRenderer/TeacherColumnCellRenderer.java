@@ -1,7 +1,6 @@
 package by.dmitrui98.tableRenderer;
 
 import by.dmitrui98.data.Teacher;
-import by.dmitrui98.data.WorkingTeacher;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -19,7 +18,7 @@ public class TeacherColumnCellRenderer extends DefaultTableCellRenderer {
         String names = null;
         if (value instanceof Teacher) {
             Teacher t = (Teacher) value;
-            names = t.getNames().toString();
+            names = t.getSurnames().toString();
         }
 
         JLabel l = (JLabel) c;

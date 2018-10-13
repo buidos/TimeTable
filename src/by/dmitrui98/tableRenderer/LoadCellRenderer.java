@@ -43,12 +43,15 @@ public class LoadCellRenderer extends DefaultTableCellRenderer {
 
         if (value instanceof WorkingTeacher) {
             WorkingTeacher wt = (WorkingTeacher) value;
-            if (wt.getPair(tb.defineRow(row), groupCol).getTypeHour() == TypeHour.COMBO)
+            if (wt.getPair(tb.defineRow(row), groupCol).getTypeHour() == TypeHour.COMBO) {
                 c.setBackground(Color.RED);
+                return c;
+            }
             else
                 c.setBackground(Color.YELLOW);
         } else if (value instanceof ArrayList) {
             c.setBackground(Color.RED);
+            return c;
         } else if (teacherCol == column) {
             c.setBackground(Color.GREEN);
         }
@@ -58,7 +61,7 @@ public class LoadCellRenderer extends DefaultTableCellRenderer {
             if (selectedTeacher != null) {
                 boolean fl = false;
                 for (WorkingTeacher wt : tb.getWorkingTeachers())
-                    if (Main.isThere(wt.getNames(), selectedTeacher.getNames())) {
+                    if (Main.isThere(wt.getNames(), selectedTeacher.getSurnames())) {
 
                         for (Pair p : wt.getPairs())
                             if (p.getRow() == tb.defineRow(row))

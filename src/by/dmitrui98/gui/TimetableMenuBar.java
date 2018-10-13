@@ -115,7 +115,7 @@ public class TimetableMenuBar extends JMenuBar {
 //            for (TeacherColumn tc : teacherColumns) {
 //                System.out.println(tc.getGroup()+":");
 //                for (Teacher t : tc.getTeacherList())
-//                    System.out.println(t.getNames() + " " + t.getLoad());
+//                    System.out.println(t.getSurnames() + " " + t.getLoad());
 //            }
 
 

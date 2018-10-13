@@ -133,7 +133,7 @@ public class TableFactory {
     }
 
     public boolean isEmptyCombo(int r) {
-        ArrayList<String> names = selectedTeacher.getNames();
+        ArrayList<String> names = selectedTeacher.getSurnames();
         int row = defineRow(r);
         // проверяем, чтобы учитель не был занят
         for (WorkingTeacher wt : workingTeachers) {
@@ -235,7 +235,7 @@ public class TableFactory {
 
                                 boolean fl = true;
                                 for (WorkingTeacher wt : workingTeachers) {
-                                    if (wt.getNames().equals(selectedTeacher.getNames())) {
+                                    if (wt.getNames().equals(selectedTeacher.getSurnames())) {
                                         wt.addPair(new Pair(defineRow(row), groupCol, TypeHour.COMBO));
                                         loadTable.setValueAt(wt, row, col);
                                         fl = false;
@@ -243,7 +243,7 @@ public class TableFactory {
                                 }
 
                                 if (fl) {
-                                    WorkingTeacher workingTeacher = new WorkingTeacher(selectedTeacher.getNames(),
+                                    WorkingTeacher workingTeacher = new WorkingTeacher(selectedTeacher.getSurnames(),
                                             new Pair(defineRow(row), groupCol, TypeHour.COMBO));
                                     workingTeachers.add(workingTeacher);
                                     loadTable.setValueAt(workingTeacher, row, col);

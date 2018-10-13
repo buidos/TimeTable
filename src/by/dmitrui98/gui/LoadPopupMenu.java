@@ -104,7 +104,7 @@ public class LoadPopupMenu extends JPopupMenu {
     }
 
     public boolean isEmpty(TypeHour typeHour) {
-        ArrayList<String> names = selectedTeacher.getNames();
+        ArrayList<String> names = selectedTeacher.getSurnames();
         int load = selectedTeacher.getLoad();
         int row = defineRow(loadRow);
 
@@ -180,7 +180,7 @@ public class LoadPopupMenu extends JPopupMenu {
             boolean fl = true;
             WorkingTeacher workingTeacher = null;
             for (WorkingTeacher wt : workingTeachers) {
-                if (wt.getNames().equals(selectedTeacher.getNames())) {
+                if (wt.getNames().equals(selectedTeacher.getSurnames())) {
                     wt.addPair(new Pair(defineRow(loadRow), groupCol, TypeHour.NUMERATOR));
                     workingTeacher = wt;
                     fl = false;
@@ -189,7 +189,7 @@ public class LoadPopupMenu extends JPopupMenu {
             }
 
             if (fl) {
-                workingTeacher = new WorkingTeacher(selectedTeacher.getNames(),
+                workingTeacher = new WorkingTeacher(selectedTeacher.getSurnames(),
                         new Pair(defineRow(loadRow), groupCol, TypeHour.NUMERATOR));
                 workingTeachers.add(workingTeacher);
             }
@@ -219,7 +219,7 @@ public class LoadPopupMenu extends JPopupMenu {
             WorkingTeacher workingTeacher = null;
             boolean fl = true;
             for (WorkingTeacher wt : workingTeachers) {
-                if (wt.getNames().equals(selectedTeacher.getNames())) {
+                if (wt.getNames().equals(selectedTeacher.getSurnames())) {
                     wt.addPair(new Pair(defineRow(loadRow), groupCol, TypeHour.DENOMINATOR));
                     workingTeacher = wt;
                     fl = false;
@@ -228,7 +228,7 @@ public class LoadPopupMenu extends JPopupMenu {
             }
 
             if (fl) {
-                workingTeacher = new WorkingTeacher(selectedTeacher.getNames(),
+                workingTeacher = new WorkingTeacher(selectedTeacher.getSurnames(),
                         new Pair(defineRow(loadRow), groupCol, TypeHour.DENOMINATOR));
                 workingTeachers.add(workingTeacher);
             }
@@ -314,7 +314,7 @@ public class LoadPopupMenu extends JPopupMenu {
             Object o = teacherTable.getValueAt(r, teacherCol);
             if (o instanceof Teacher) {
                 Teacher t = (Teacher) o;
-                if (t.getNames().equals(names))
+                if (t.getSurnames().equals(names))
                     return r;
             }
         }
